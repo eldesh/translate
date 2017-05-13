@@ -1,0 +1,126 @@
+digraph graph_name {
+  fontname = "IPAGothic";
+
+  graph [
+    charset = "UTF-8";
+    label = "章の依存関係",
+    labelloc = "t",
+    labeljust = "c",
+  ];
+
+  node [
+    style = "solid,filled",
+    fontsize = 16,
+    fontname = "IPAGothic",
+    color = "#000000",
+    fillcolor = "#add8e6",
+    fixedsize = true,
+	shape = box,
+    width = 3.4
+  ];
+
+  edge [
+    style = "bold,solid",
+    fontsize = 14,
+    fontname = "IPAGothic",
+    color = "#c0c0c0",
+    labelfloat = true,
+    labeldistance = 2.5,
+    labelangle = 70,
+    fixedsize=5
+  ];
+
+  subgraph cluster_basis {
+    label = "基本機能";
+    labelloc = "t";
+    labeljust = "l";
+    fillcolor = "#ababab";
+
+    eg_illegal_access [label = "2. 例: illegal_access.c"];
+    malloc_block_chunk [label = "3. malloc_block チャンク"];
+    func_and_contracts [label = "4. 関数と契約"];
+    patterns [label = "5. パターン"];
+    predicates [label = "6. 述語"];
+    recursive_predicates [label = "7. 再帰的な述語"];
+    loops [label = "8. ループ"];
+    inductive_datatypes [label = "9. 帰納データ型"];
+    fixpoint_functions [label = "10. 不動点関数"];
+
+    eg_illegal_access -> malloc_block_chunk;
+    malloc_block_chunk -> func_and_contracts;
+    func_and_contracts -> patterns;
+    patterns -> predicates;
+    predicates -> recursive_predicates;
+    recursive_predicates -> loops;
+    recursive_predicates -> inductive_datatypes;
+    inductive_datatypes -> fixpoint_functions;
+  };
+
+  subgraph cluster_ptrarray {
+    label = "文字列とポインタ";
+    labelloc = "t";
+    labeljust = "l";
+    fillcolor = "#ababab";
+
+    character_arrays [label = "25. 文字配列"];
+    looping_over_an_array [label = "26. 配列に対するループ"];
+    recursive_loop_proofs [label = "27. 再帰的なループの証明"];
+    tracking_array_contents [label = "28. 配列の内容物を追跡する"];
+    strings [label = "29. 文字列"];
+
+    character_arrays -> looping_over_an_array;
+    looping_over_an_array -> recursive_loop_proofs;
+    recursive_loop_proofs -> tracking_array_contents;
+    tracking_array_contents -> strings;
+  };
+
+  subgraph cluster_thread {
+    label = "マルチスレッド";
+    labelloc = "t";
+    labeljust = "l";
+    fillcolor = "#ababab";
+
+    multithreading              [label = "19. マルチスレッド"];
+    fractional_permissions      [label = "20. 分割所有パーミッション"];
+    precise_predicates          [label = "21. 正確な述語"];
+    mutexes                     [label = "23. Mutex"];
+    leaking_and_dummy_fractions [label = "24. リークとダミー断片"];
+
+    multithreading         -> fractional_permissions;
+    fractional_permissions -> precise_predicates;
+    precise_predicates     -> mutexes;
+    mutexes                -> leaking_and_dummy_fractions;
+  };
+
+  // node define
+  introduction           [label = "1. 導入"];
+  lemmas                 [label = "11. 補題"];
+  function_pointers      [label = "12. 関数ポインタ"];
+  by_reference_parameter [label = "13. 参照によるパラメータ"];
+  arithmetic_overflow    [label = "14. 算術オーバーフロー", fillcolor="#ffffe0"];
+  predicate_families     [label = "15. 述語族"];
+  generics               [label = "16. ジェネリクス"];
+  predicate_values       [label = "17. 述語値"];
+  predicate_constructors [label = "18. 述語コンストラクタ"];
+  auto_open_close        [label = "22. 自動 open/close", fillcolor="#ffffe0"];
+  arrays_of_pointers     [label = "30. ポインタの配列"];
+
+  introduction       -> eg_illegal_access;
+  fixpoint_functions -> character_arrays;
+  fixpoint_functions -> lemmas;
+  loops              -> looping_over_an_array;
+  strings            -> lemmas;
+  loops              -> lemmas;
+  predicate_families -> multithreading;
+  lemmas             -> function_pointers;
+  function_pointers  -> by_reference_parameter;
+  function_pointers  -> predicate_families;
+  lemmas             -> generics;
+  generics           -> predicate_values;
+  predicate_values   -> predicate_constructors;
+  predicate_values   -> arrays_of_pointers;
+  precise_predicates -> auto_open_close;
+  predicates         -> arithmetic_overflow;
+  strings            -> arrays_of_pointers;
+}
+
